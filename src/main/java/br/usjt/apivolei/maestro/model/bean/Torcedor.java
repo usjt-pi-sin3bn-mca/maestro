@@ -2,8 +2,6 @@ package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,13 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -39,8 +33,9 @@ public class Torcedor implements Serializable {
 	@NotBlank
 	@JsonProperty("senha")
 	private String senha;
+	@Column(name = "ativo")
+	private boolean contaAtiva;
 	// socio torcedor
-	@Column(columnDefinition = "boolean default false")
 	private boolean socio;
 	private String cpf;
 	@Column(name = "datanasc")
@@ -48,10 +43,6 @@ public class Torcedor implements Serializable {
 	private String endereco;
 	private String celular;
 	private String genero; // M, F, O
-
-	@JsonIgnore
-	@Transient
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
 	public Torcedor(boolean socio, String cpf, Date dataNascimento, String endereco, String celular, String genero) {
 		this.socio = socio;
@@ -145,14 +136,12 @@ public class Torcedor implements Serializable {
 		this.genero = genero;
 	}
 
-	@JsonAnyGetter
-	public Map<String, Object> getAdditionalProperties() {
-		return this.additionalProperties;
+	public boolean isContaAtiva() {
+		return contaAtiva;
 	}
 
-	@JsonAnySetter
-	public void setAdditionalProperty(String name, Object value) {
-		this.additionalProperties.put(name, value);
+	public void setContaAtiva(boolean contaAtiva) {
+		this.contaAtiva = contaAtiva;
 	}
 
 	@Override
