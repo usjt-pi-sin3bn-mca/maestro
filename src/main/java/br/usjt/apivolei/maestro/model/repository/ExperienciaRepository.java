@@ -8,5 +8,5 @@ import br.usjt.apivolei.maestro.model.bean.Experiencia;
 @Repository
 public interface ExperienciaRepository extends JpaRepository<Experiencia, Long> {
 
-	public Experiencia findOneByNome(Experiencia nome);
+	Experiencia findOneByNome(String nome);
 }

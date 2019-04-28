@@ -3,6 +3,7 @@ package br.usjt.apivolei.maestro.model.service;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.ws.Response;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,50 @@ public class ExperienciaService {
 	
 	@Autowired
 	private ExperienciaRepository expeRepo;
-	
+
+	public ResponseEntity<?> cadastrar(Experiencia experiencia, HttpServletRequest request){
+		String mensagemRetorno = "";
+		int statusRetorno = 0;
+
+		try{
+			expeRepo.save(experiencia);
+
+			mensagemRetorno = "Experiência cadastrada";
+			statusRetorno = 200;
+		}catch(Exception e){
+			mensagemRetorno = "Erro ao cadastrar experiência";
+			statusRetorno = 400;
+		}
+		finally {
+			return ResponseUtils.getInstanceResponseEntity(
+					ResponseUtils.getInstanceDetalhesRetorno(new Date(), mensagemRetorno, "uri=" + request.getRequestURI()),
+					statusRetorno
+			);
+		}
+	}
+
+	public ResponseEntity<?> buscar(HttpServletRequest request){
+		try {
+			return ResponseUtils.getInstanceResponseEntity(expeRepo.findAll(), 200);
+		}catch(Exception e){
+			return ResponseUtils.getInstanceResponseEntity(
+					ResponseUtils.getInstanceDetalhesRetorno(new Date(), "Ocorreu um erro ao buscar as experiências", "uri=" + request.getRequestURI()),
+					400
+			);
+		}
+	}
+
+	public ResponseEntity<?> buscar(Long id, HttpServletRequest request){
+		try {
+			return ResponseUtils.getInstanceResponseEntity(expeRepo.findById(id), 200);
+		}catch(Exception e){
+			return ResponseUtils.getInstanceResponseEntity(
+					ResponseUtils.getInstanceDetalhesRetorno(new Date(), "Ocorreu um erro ao buscar a experiência", "uri=" + request.getRequestURI()),
+					400
+			);
+		}
+	}
+
 	public ResponseEntity<?> deletar(Experiencia expe, HttpServletRequest request ){
         
 		try {
@@ -41,7 +85,7 @@ public class ExperienciaService {
 		experiencia.setLocal(experienciaParam.getLocal());
 
 		expeRepo.save(experiencia);
-		
+
 		return ResponseUtils.getInstanceResponseEntity(ResponseUtils.getInstanceDetalhesRetorno(new Date(),
 				"Dados alterados", "uri=" + request.getRequestURI()), 200);
 		
