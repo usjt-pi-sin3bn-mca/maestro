@@ -36,7 +36,7 @@ public class Torcedor implements Serializable {
 	private String senha;
 	@Column(name = "ativo")
 	private boolean contaAtiva;
-	// socio torcedor
+	// dados de um socio torcedor
 	private boolean socio;
 	@Column(unique=true)
 	private String cpf;
