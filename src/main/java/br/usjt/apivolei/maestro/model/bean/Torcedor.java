@@ -29,6 +29,7 @@ public class Torcedor implements Serializable {
 	private String nome;
 	@NotBlank
 	@Email
+	@Column(unique=true)
 	private String email;
 	@NotBlank
 	@JsonProperty("senha")
@@ -37,6 +38,7 @@ public class Torcedor implements Serializable {
 	private boolean contaAtiva;
 	// socio torcedor
 	private boolean socio;
+	@Column(unique=true)
 	private String cpf;
 	@Column(name = "datanasc")
 	private Date dataNascimento;
