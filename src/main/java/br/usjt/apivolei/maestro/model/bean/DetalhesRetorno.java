@@ -2,6 +2,9 @@ package br.usjt.apivolei.maestro.model.bean;
 
 import java.util.Date;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class DetalhesRetorno {
 	private Date timestamp;
 	private String message;
@@ -12,6 +15,16 @@ public class DetalhesRetorno {
 	    this.timestamp = timestamp;
 	    this.message = message;
 	    this.details = details;
+	}
+	
+	public DetalhesRetorno() {
+	}
+
+	public DetalhesRetorno build(Date timestamp, String message, String details) {
+		setTimestamp(timestamp);
+		setMessage(message);
+		setDetails(details);
+		return this;
 	}
 	
 	public Date getTimestamp() {

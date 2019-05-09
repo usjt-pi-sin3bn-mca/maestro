@@ -29,20 +29,23 @@ public class Torcedor implements Serializable {
 	private String nome;
 	@NotBlank
 	@Email
+	@Column(unique=true)
 	private String email;
 	@NotBlank
 	@JsonProperty("senha")
 	private String senha;
 	@Column(name = "ativo")
 	private boolean contaAtiva;
-	// socio torcedor
+	// dados de um socio torcedor
 	private boolean socio;
+	@Column(unique=true)
 	private String cpf;
 	@Column(name = "datanasc")
 	private Date dataNascimento;
 	private String endereco;
 	private String celular;
 	private String genero; // M, F, O
+	private Integer pontos;
 
 	public Torcedor(boolean socio, String cpf, Date dataNascimento, String endereco, String celular, String genero) {
 		this.socio = socio;
@@ -144,6 +147,14 @@ public class Torcedor implements Serializable {
 		this.contaAtiva = contaAtiva;
 	}
 
+	public Integer getPontos() {
+		return pontos;
+	}
+	
+	public void setPontos(Integer pontos) {
+		this.pontos = pontos;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,9 +182,9 @@ public class Torcedor implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Torcedor [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", socio=" + socio
-				+ ", cpf=" + cpf + ", dataNascimento=" + dataNascimento + ", endereco=" + endereco + ", celular="
-				+ celular + ", genero=" + genero + "]";
+		return "Torcedor [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", contaAtiva="
+				+ contaAtiva + ", socio=" + socio + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
+				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos + "]";
 	}
 
 }
