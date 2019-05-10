@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.stereotype.Component;
 
 @Entity
@@ -23,17 +24,21 @@ public class Experiencia implements  Serializable {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+
 	@NotBlank
+	@Column
 	private Date data;
+
+	@Column
     @NotBlank
-	@Column 
 	private Long custo;
+
+	@Column
     @NotBlank
-	@Column 
     private String descricao, local, nome;
+
+	@Column
     @NotBlank
-	@Column 
     private int qtdDisponivel;
 	
     public Long getId() {
@@ -72,6 +77,7 @@ public class Experiencia implements  Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public int getQtdDisponivel() {
 		return qtdDisponivel;
 	}

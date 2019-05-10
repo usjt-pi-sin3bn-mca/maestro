@@ -34,6 +34,7 @@ public class ExperienciaService {
 		try {
 			experienciaList = expeRepo.findAll();
 		}catch(Exception e){
+			e.printStackTrace();
 			return ResponseEntity.badRequest().body("Ocorreu um erro ao buscar as experiências");
 		}
 
@@ -57,6 +58,7 @@ public class ExperienciaService {
 		try {
         	expeRepo.delete(expe);
  		} catch (Exception e) {
+			e.printStackTrace();
  			return ResponseEntity.badRequest().body("Experiencia nao existe");
  		}
 
