@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Resource
-public class ExperienciaController {
+public class ExperienciaResource {
 
     @Autowired
     private ExperienciaService experienciaService;
