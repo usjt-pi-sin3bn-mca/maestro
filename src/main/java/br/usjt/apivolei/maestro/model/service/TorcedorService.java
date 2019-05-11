@@ -28,12 +28,12 @@ public class TorcedorService {
 	private TorcedorRepository repo;
 
 	public ResponseEntity<?> cadastrar(Torcedor torcedor, HttpServletRequest request) {
-		
+
 		torcedor.setContaAtiva(true);
 		torcedor.setSocio(false);
 		Torcedor t = repo.save(torcedor);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(t.getId()).toUri();
-		
+
 		return ResponseEntity.created(uri).body(this.retorno.build(new Date(), "Cadastro realizado", "uri=" + request.getRequestURI()));
 	}
 
@@ -59,6 +59,10 @@ public class TorcedorService {
 
 	public ResponseEntity<?> getTorcedor(Long id) {
 		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON.toString()).body(repo.findById(id).get());
+	}
+
+	public Torcedor buscarTorcedor(Long id) {
+		return repo.findById(id).get();
 	}
 
 	public ResponseEntity<?> souSocio(Long id, HttpServletRequest request) {
