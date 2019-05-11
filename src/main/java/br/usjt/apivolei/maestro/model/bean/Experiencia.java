@@ -1,7 +1,7 @@
 package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.stereotype.Component;
@@ -25,21 +26,25 @@ public class Experiencia implements  Serializable {
 	@GeneratedValue (strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	@Column
-	private Date data;
+	@NotNull
+	private LocalDate data;
 
 	@Column
-    @NotBlank
-	private Long custo;
+	@NotNull
+	private Double custo;
 
 	@Column
     @NotBlank
     private String descricao, local, nome;
 
 	@Column
-    @NotBlank
+	@NotNull
     private int qtdDisponivel;
+
+	@Column
+	private boolean ativo;
 	
     public Long getId() {
 		return id;
@@ -47,16 +52,16 @@ public class Experiencia implements  Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Date getData() {
+	public LocalDate getData() {
 		return data;
 	}
-	public void setData(Date data) {
+	public void setData(LocalDate data) {
 		this.data = data;
 	}
-	public Long getCusto() {
+	public Double getCusto() {
 		return custo;
 	}
-	public void setCusto(Long custo) {
+	public void setCusto(Double custo) {
 		this.custo = custo;
 	}
 	public String getDescricao() {
@@ -77,14 +82,20 @@ public class Experiencia implements  Serializable {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
 	public int getQtdDisponivel() {
 		return qtdDisponivel;
 	}
 	public void setQtdDisponivel(int qtdDisponivel) {
 		this.qtdDisponivel = qtdDisponivel;
 	}
-    
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
