@@ -65,8 +65,6 @@ public class ExperienciaResource {
     public ResponseEntity<?> adquirir(@RequestParam Long idExperiencia, @RequestParam Long idTorcedor, HttpServletRequest request){
         boolean experienciaAdquirida = false;
 
-        System.out.println("torcedor = " + idTorcedor + " | experiencia = " + idExperiencia);
-
         try{
             Experiencia experiencia = experienciaService.buscar(idExperiencia);
             Torcedor torcedor = torcedorService.buscarTorcedor(idTorcedor);
