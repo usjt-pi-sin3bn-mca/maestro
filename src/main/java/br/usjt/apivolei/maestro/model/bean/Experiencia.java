@@ -2,13 +2,9 @@ package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -45,6 +41,10 @@ public class Experiencia implements  Serializable {
 
 	@Column
 	private boolean ativo;
+
+	@ManyToMany
+	@JoinTable(name = "tb_torcedor_experiencia", joinColumns = @JoinColumn(name = "id_torcedor"), inverseJoinColumns = @JoinColumn(name = "id_experiencia"))
+	private List<Torcedor> torcedor;
 	
     public Long getId() {
 		return id;
@@ -58,42 +58,54 @@ public class Experiencia implements  Serializable {
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
+
 	public Double getCusto() {
 		return custo;
 	}
 	public void setCusto(Double custo) {
 		this.custo = custo;
 	}
+
 	public String getDescricao() {
 		return descricao;
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+
 	public String getLocal() {
 		return local;
 	}
 	public void setLocal(String local) {
 		this.local = local;
 	}
+
 	public String getNome() {
 		return nome;
 	}
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
 	public int getQtdDisponivel() {
 		return qtdDisponivel;
 	}
 	public void setQtdDisponivel(int qtdDisponivel) {
 		this.qtdDisponivel = qtdDisponivel;
 	}
+
 	public boolean isAtivo() {
 		return ativo;
 	}
-
 	public void setAtivo(boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public List<Torcedor> getTorcedor() {
+		return torcedor;
+	}
+	public void addTorcedor(Torcedor torcedor) {
+		this.torcedor.add(torcedor);
 	}
 
 	@Override
