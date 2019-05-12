@@ -1,4 +1,4 @@
-package br.usjt.apivolei.maestro.controller;
+package br.usjt.apivolei.maestro.exception;
 
 import java.util.Date;
 import java.util.NoSuchElementException;

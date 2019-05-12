@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -41,7 +42,7 @@ public class TorcedorController {
 		return ResponseUtils.getInstanceResponseEntity(service.getTorcedor(id), 200);
 	}
 
-	@RequestMapping(value = "/torcedor/logar", method = RequestMethod.POST)
+	@PostMapping("/torcedor/logar")
 	public ResponseEntity<?> logar(@RequestBody Torcedor usuario, HttpServletRequest request) {
 		return service.logar(usuario, request);
 	}
