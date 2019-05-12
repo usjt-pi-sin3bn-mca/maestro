@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.usjt.apivolei.maestro.model.bean.Convenio;
@@ -19,7 +18,7 @@ import br.usjt.apivolei.maestro.model.service.ConvenioService;
 import br.usjt.apivolei.maestro.model.util.ResponseUtils;
 
 @RestController
-@RequestMapping("/convenio")
+@RequestMapping("/api/convenio")
 public class ConveionResource {
 	@Autowired
 	private ConvenioService service;
