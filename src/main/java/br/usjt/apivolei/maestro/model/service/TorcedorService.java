@@ -28,12 +28,12 @@ public class TorcedorService {
 	private TorcedorRepository repo;
 
 	public ResponseEntity<?> cadastrar(Torcedor torcedor, HttpServletRequest request) {
-		
+
 		torcedor.setContaAtiva(true);
 		torcedor.setSocio(false);
 		Torcedor t = repo.save(torcedor);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(t.getId()).toUri();
-		
+
 		return ResponseEntity.created(uri).body(this.retorno.build(new Date(), "Cadastro realizado", "uri=" + request.getRequestURI()));
 	}
 
@@ -61,6 +61,10 @@ public class TorcedorService {
 		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON.toString()).body(repo.findById(id).get());
 	}
 
+	public Torcedor buscarTorcedor(Long id) {
+		return repo.findById(id).get();
+	}
+
 	public ResponseEntity<?> souSocio(Long id, HttpServletRequest request) {
 		
 		Torcedor torcedor = repo.findById(id).get();
@@ -78,19 +82,13 @@ public class TorcedorService {
 
 	@SuppressWarnings("unlikely-arg-type")
 	public ResponseEntity<?> serSocio(Long id, Torcedor socio, HttpServletRequest request) {
-		
-		if (	socio.getCelular() != null && !"".equals(socio.getCelular()) && 
-				socio.getCpf() != null && !"".equals(socio.getCpf())     && 
-				socio.getDataNascimento() != null && !"".equals(socio.getDataNascimento()) &&
-				socio.getEndereco() != null && !"".equals(socio.getEndereco()) &&
-				("M".equals(socio.getGenero()) || "F".equals(socio.getGenero()) || "O".equals(socio.getGenero()))) {
-
+		if (camposObrigatoriosOK(socio)) {
 			Torcedor torcedor = repo.findById(id).get();
 			
 			if (torcedor.isContaAtiva()) {
-				
+
 				if (!torcedor.isSocio()) {
-					
+
 					torcedor.setSocio(true);
 					torcedor.setCpf(socio.getCpf());
 					torcedor.setDataNascimento(socio.getDataNascimento());
@@ -110,6 +108,18 @@ public class TorcedorService {
 		}
 		
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "Parametros inválidos", "uri=" + request.getRequestURI()));
+	}
+
+	private boolean camposObrigatoriosOK(Torcedor socio) {
+		return socio.getCelular() != null
+				&& !"".equals(socio.getCelular())
+				&& socio.getCpf() != null
+				&& !"".equals(socio.getCpf())
+				&& socio.getDataNascimento() != null
+				&& !"".equals(socio.getDataNascimento())
+				&& socio.getEndereco() != null
+				&& !"".equals(socio.getEndereco())
+				&& ("M".equals(socio.getGenero()) || "F".equals(socio.getGenero()) || "O".equals(socio.getGenero()));
 	}
 
 	public ResponseEntity<?> desativarConta(Long id, HttpServletRequest request) {
