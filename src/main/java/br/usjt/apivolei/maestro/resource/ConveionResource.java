@@ -37,6 +37,7 @@ public class ConveionResource {
 	public ResponseEntity<?> alterarDados(@PathVariable Long id, @RequestBody Convenio convenio, HttpServletRequest request) {
 		return service.alterarDados(id, convenio, request);
 	}
+	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> listar(@PathVariable("id") Long id) {
 		return ResponseUtils.getInstanceResponseEntity(service.listarConvenios(id), 200);
