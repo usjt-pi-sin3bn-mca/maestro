@@ -42,4 +42,5 @@ public class ConveionResource {
 	public ResponseEntity<?> listar(@PathVariable("id") Long id) {
 		return ResponseUtils.getInstanceResponseEntity(service.listarConvenios(id), 200);
 	}
+	
 }
