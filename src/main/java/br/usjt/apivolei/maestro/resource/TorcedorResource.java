@@ -72,5 +72,11 @@ public class TorcedorResource {
 	public ResponseEntity<?> ativarConta(@PathVariable Long id, HttpServletRequest request) {
 		return service.ativarConta(id, request);
 	}
-	
+
+	@GetMapping("/pontuacao/{id}")
+	public ResponseEntity<?> getPonto(@PathVariable Long id){
+		Torcedor torcedor = service.buscarTorcedor(id);
+
+		return ResponseEntity.ok(torcedor.getPontos());
+	}
 }

@@ -1,11 +1,10 @@
 package br.usjt.apivolei.maestro.model.service;
 
 import java.net.URI;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -62,7 +61,7 @@ public class TorcedorService {
 	}
 
 	public Torcedor buscarTorcedor(Long id) {
-		return repo.findById(id).get();
+		return repo.findByContaAtiva(id, true).orElseThrow(NoSuchElementException::new);
 	}
 
 	public ResponseEntity<?> souSocio(Long id, HttpServletRequest request) {
@@ -188,5 +187,13 @@ public class TorcedorService {
 		}
 		
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
+	}
+
+	public void incrementarPontuacao(Torcedor torcedor, Double pontosIncrementar){
+		torcedor.setPontos(torcedor.getPontos() + pontosIncrementar.intValue());
+	}
+
+	public void decrementarPontuacao(Torcedor torcedor, Double pontosDecrementar){
+		torcedor.setPontos(torcedor.getPontos() - pontosDecrementar.intValue());
 	}
 }
