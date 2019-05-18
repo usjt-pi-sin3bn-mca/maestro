@@ -94,8 +94,7 @@ public class ExperienciaService {
 
 	public boolean adquirir(Experiencia experiencia, Torcedor torcedor) {
 		if(torcedor.getPontos() > experiencia.getCusto()) {
-			IPonto pontoTorcedor = new PontoTorcedor(torcedor);
-
+			IPonto pontoTorcedor = new PontoTorcedor(torcedor.getPontos().doubleValue());
 			pontoTorcedor.decrementar(experiencia.getCusto());
 
 			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() - 1);

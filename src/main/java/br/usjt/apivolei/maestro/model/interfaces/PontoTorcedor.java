@@ -1,21 +1,23 @@
 package br.usjt.apivolei.maestro.model.interfaces;
 
-import br.usjt.apivolei.maestro.model.bean.Torcedor;
-
 public class PontoTorcedor implements IPonto {
-    private Torcedor torcedor;
+    private Double pontuacaoAtual;
 
-    public PontoTorcedor(Torcedor torcedor){
-        this.torcedor = torcedor;
+    public PontoTorcedor(Double pontos) {
+        pontuacaoAtual = pontos;
     }
 
     @Override
-    public void incrementar(Double ponto) {
-        torcedor.setPontos(torcedor.getPontos() + ponto.intValue());
+    public Double incrementar(Double pontoIncrementar) {
+        pontuacaoAtual += pontoIncrementar;
+
+        return pontuacaoAtual;
     }
 
     @Override
-    public void decrementar(Double ponto) {
-        torcedor.setPontos(torcedor.getPontos() - ponto.intValue());
+    public Double decrementar(Double pontoDecrementar) {
+        pontuacaoAtual -= pontoDecrementar;
+
+        return pontuacaoAtual;
     }
 }
