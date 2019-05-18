@@ -1,4 +1,4 @@
-package br.usjt.apivolei.maestro.model.interfaces;
+package br.usjt.apivolei.maestro.interfaces;
 
 public interface IPonto {
     Double incrementar(Double valorIncrementar);

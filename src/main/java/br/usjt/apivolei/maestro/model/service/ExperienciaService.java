@@ -5,8 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import br.usjt.apivolei.maestro.model.bean.Torcedor;
-import br.usjt.apivolei.maestro.model.interfaces.CalculoPontuacao;
-import br.usjt.apivolei.maestro.model.interfaces.IPonto;
+import br.usjt.apivolei.maestro.interfaces.CalculoPontuacao;
+import br.usjt.apivolei.maestro.interfaces.IPonto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
