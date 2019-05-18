@@ -188,12 +188,4 @@ public class TorcedorService {
 		
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
 	}
-
-	public void incrementarPontuacao(Torcedor torcedor, Double pontosIncrementar){
-		torcedor.setPontos(torcedor.getPontos() + pontosIncrementar.intValue());
-	}
-
-	public void decrementarPontuacao(Torcedor torcedor, Double pontosDecrementar){
-		torcedor.setPontos(torcedor.getPontos() - pontosDecrementar.intValue());
-	}
 }
