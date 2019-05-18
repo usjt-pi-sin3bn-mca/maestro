@@ -5,8 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import br.usjt.apivolei.maestro.model.bean.Torcedor;
-import br.usjt.apivolei.maestro.model.interfaces.CalculoPontuacao;
 import br.usjt.apivolei.maestro.model.interfaces.IPonto;
+import br.usjt.apivolei.maestro.model.interfaces.PontoTorcedor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -94,9 +94,8 @@ public class ExperienciaService {
 
 	public boolean adquirir(Experiencia experiencia, Torcedor torcedor) {
 		if(torcedor.getPontos() > experiencia.getCusto()) {
-			IPonto calculoPontuacao = new CalculoPontuacao(torcedor.getPontos().doubleValue());
-
-			torcedor.setPontos(calculoPontuacao.decrementar(experiencia.getCusto()).intValue());
+			IPonto pontoTorcedor = new PontoTorcedor(torcedor.getPontos().doubleValue());
+			pontoTorcedor.decrementar(experiencia.getCusto());
 
 			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() - 1);
 
