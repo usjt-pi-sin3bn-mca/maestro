@@ -1,0 +1,30 @@
+version: '3.3'
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: my_sql
+    volumes:
+       #- ./deploy_structure.sql:/docker-entrypoint-initdb.d/deploy_structure.sql
+       - mysql-data:/var/lib/mysql
+    environment:
+        MYSQL_DATABASE: maestro
+        MYSQL_ROOT_PASSWORD: root
+    ports:
+        - "3306:3306"
+  application:
+      depends_on:
+        - mysql
+      build: .
+      ports:
+        - "8080:8080"
+      restart: always
+      #volumes:
+      #  - ./:/app/
+      environment:
+        MYSQL_HOST: mysql
+        MYSQL_DB_USERNAME: root
+        MYSQL_DB_PASSWORD: root
+volumes:
+  mysql-data:
+    driver: local
