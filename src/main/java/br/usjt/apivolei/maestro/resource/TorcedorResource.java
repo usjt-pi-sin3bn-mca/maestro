@@ -75,8 +75,13 @@ public class TorcedorResource {
 
 	@GetMapping("/pontuacao/{id}")
 	public ResponseEntity<?> getPonto(@PathVariable Long id){
-		Torcedor torcedor = service.buscarTorcedor(id);
-
-		return ResponseEntity.ok(torcedor.getPontos());
+		return ResponseEntity.ok(service.buscarTorcedor(id).getPontos());
+	}
+	
+	public ResponseEntity<?> incrementarPontuacaoQRCode() {
+		
+		
+		
+		return null;
 	}
 }
