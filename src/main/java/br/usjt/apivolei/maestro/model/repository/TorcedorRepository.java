@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface TorcedorRepository extends JpaRepository<Torcedor, Long> {
 
 	public Torcedor findOneByEmailAndSenha(String email, String senha); 
-	Optional<Torcedor> findByContaAtiva(Long id, boolean ativo);
+	Optional<Torcedor> findByIdAndContaAtiva(Long id, boolean ativo);
 }

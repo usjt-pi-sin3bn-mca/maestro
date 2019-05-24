@@ -12,7 +12,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.stereotype.Component;
 
 @Entity
-@Component
 @Table(name = "tb_experiencia")
 public class Experiencia implements  Serializable {
 	

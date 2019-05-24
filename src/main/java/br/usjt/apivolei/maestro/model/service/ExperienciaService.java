@@ -16,7 +16,6 @@ import br.usjt.apivolei.maestro.model.repository.ExperienciaRepository;
 
 @Service
 public class ExperienciaService {
-	
 	@Autowired
 	private ExperienciaRepository expeRepo;
 
@@ -24,7 +23,7 @@ public class ExperienciaService {
 		try{
 			experiencia.setAtivo(true);
 
-			expeRepo.save(experiencia);
+			salvar(experiencia);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -83,7 +82,7 @@ public class ExperienciaService {
 			experiencia.setDescricao(experienciaParam.getDescricao());
 			experiencia.setLocal(experienciaParam.getLocal());
 
-			expeRepo.save(experiencia);
+			salvar(experiencia);
 		}catch (Exception e){
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -104,12 +103,15 @@ public class ExperienciaService {
 			}
 
 			experiencia.addTorcedor(torcedor);
-			expeRepo.save(experiencia);
-
+			salvar(experiencia);
 			return true;
 		}
 		else{
 			return false;
 		}
+	}
+
+	public Experiencia salvar(Experiencia experiencia){
+		return expeRepo.save(experiencia);
 	}
 }
