@@ -43,6 +43,7 @@ public class TorcedorResource {
 		return ResponseEntity.ok().body(service.getTorcedor(id));
 	}
 
+
 	@PostMapping("/logar")
 	public ResponseEntity<?> logar(@RequestBody Torcedor usuario, HttpServletRequest request) {
 		return service.logar(usuario, request);
