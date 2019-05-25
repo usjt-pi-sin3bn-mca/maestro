@@ -110,8 +110,27 @@ public class ExperienciaService {
 			return false;
 		}
 	}
+	
+	public boolean cancelar(Experiencia experiencia, Torcedor torcedor) {
+		boolean torcedorRemovido = experiencia.removeTorcedor(torcedor);
+		
+		if(torcedorRemovido) {
+			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() + 1);
+			
+			IPonto pontoTorcedor = new PontoTorcedor(torcedor.getPontos().doubleValue());
+			pontoTorcedor.incrementar(experiencia.getCusto());
+			
+			salvar(experiencia);
+			
+			return true;
+		}else {
+			return false;
+		}
+		
+	}
 
 	public Experiencia salvar(Experiencia experiencia){
 		return expeRepo.save(experiencia);
 	}
+	
 }

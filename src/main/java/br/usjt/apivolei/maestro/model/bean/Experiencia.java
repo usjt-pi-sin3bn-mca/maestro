@@ -100,12 +100,26 @@ public class Experiencia implements  Serializable {
 		this.ativo = ativo;
 	}
 
-	public List<Torcedor> getTorcedor() {
+	public List<Torcedor> getTorcedorList() {
 		return torcedor;
+	}
+	public Torcedor getTorcedor(Torcedor torcedor) {
+		for(Torcedor t : this.torcedor) {
+			if(t.equals(torcedor)) {
+				return t;	
+			}
+		}
+		
+		return null;
 	}
 	public void addTorcedor(Torcedor torcedor) {
 		this.torcedor.add(torcedor);
 	}
+	public boolean removeTorcedor(Torcedor torcedorRemover) {
+		return this.torcedor.removeIf(torcedor -> torcedor.equals(torcedorRemover));
+			
+	}
+	
 
 	@Override
 	public int hashCode() {
