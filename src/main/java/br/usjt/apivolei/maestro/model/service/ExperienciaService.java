@@ -5,8 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import br.usjt.apivolei.maestro.model.bean.Torcedor;
-import br.usjt.apivolei.maestro.model.interfaces.IPonto;
-import br.usjt.apivolei.maestro.model.interfaces.PontoTorcedor;
+import br.usjt.apivolei.maestro.model.interfaces.IPontoTorcedor;
+import br.usjt.apivolei.maestro.model.interfaces.PontoTorcedorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +16,7 @@ import br.usjt.apivolei.maestro.model.repository.ExperienciaRepository;
 
 @Service
 public class ExperienciaService {
+	
 	@Autowired
 	private ExperienciaRepository expeRepo;
 
@@ -74,28 +75,32 @@ public class ExperienciaService {
 		return ResponseEntity.ok("Experiência deletada com sucesso");
 	}
 	
-	public void alterarExperiencia(Long id, Experiencia experienciaParam, HttpServletRequest request) {
+	public void alterarExperiencia(Long id, Experiencia experienciaParam) {
 		try {
 			Experiencia experiencia = expeRepo.findById(id).get();
+			
 			experiencia.setNome(experienciaParam.getNome());
 			experiencia.setData(experienciaParam.getData());
 			experiencia.setDescricao(experienciaParam.getDescricao());
 			experiencia.setLocal(experienciaParam.getLocal());
 
 			salvar(experiencia);
-		}catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(e.getMessage());
 
 			throw e;
 		}
 	}
 
 	public boolean adquirir(Experiencia experiencia, Torcedor torcedor) {
-		if(torcedor.getPontos() > experiencia.getCusto()) {
-			IPonto pontoTorcedor = new PontoTorcedor(torcedor.getPontos().doubleValue());
-			pontoTorcedor.decrementar(experiencia.getCusto());
-
+		
+		if (torcedor.isContaAtiva() 
+				&& torcedor.isSocio() 
+					&& experiencia.getQtdDisponivel() > 0
+						&& torcedor.getPontos() >= experiencia.getCusto()) {
+			IPontoTorcedor pontoTorcedor = new PontoTorcedorImpl(torcedor.getPontos());
+			
+			torcedor.setPontos(pontoTorcedor.decrementar(experiencia.getCusto()));
 			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() - 1);
 
 			if(experiencia.getQtdDisponivel() == 0){
@@ -106,9 +111,8 @@ public class ExperienciaService {
 			salvar(experiencia);
 			return true;
 		}
-		else{
-			return false;
-		}
+
+		return false;
 	}
 	
 	public boolean cancelar(Experiencia experiencia, Torcedor torcedor) {
@@ -132,5 +136,4 @@ public class ExperienciaService {
 	public Experiencia salvar(Experiencia experiencia){
 		return expeRepo.save(experiencia);
 	}
-	
 }

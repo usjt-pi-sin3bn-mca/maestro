@@ -9,7 +9,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name = "tb_experiencia")
@@ -28,7 +27,7 @@ public class Experiencia implements  Serializable {
 
 	@Column
 	@NotNull
-	private Double custo;
+	private Integer custo;
 
 	@Column
     @NotBlank
@@ -58,10 +57,10 @@ public class Experiencia implements  Serializable {
 		this.data = data;
 	}
 
-	public Double getCusto() {
+	public Integer getCusto() {
 		return custo;
 	}
-	public void setCusto(Double custo) {
+	public void setCusto(Integer custo) {
 		this.custo = custo;
 	}
 

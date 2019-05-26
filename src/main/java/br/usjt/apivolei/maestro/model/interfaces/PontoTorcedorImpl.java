@@ -1,21 +1,21 @@
 package br.usjt.apivolei.maestro.model.interfaces;
 
-public class PontoTorcedor implements IPonto {
-    private Double pontuacaoAtual;
+public class PontoTorcedorImpl implements IPontoTorcedor {
+    private Integer pontuacaoAtual;
 
-    public PontoTorcedor(Double pontos) {
+    public PontoTorcedorImpl(Integer pontos) {
         pontuacaoAtual = pontos;
     }
 
     @Override
-    public Double incrementar(Double pontoIncrementar) {
+    public Integer incrementar(Integer pontoIncrementar) {
         pontuacaoAtual += pontoIncrementar;
 
         return pontuacaoAtual;
     }
 
     @Override
-    public Double decrementar(Double pontoDecrementar) {
+    public Integer decrementar(Integer pontoDecrementar) {
         pontuacaoAtual -= pontoDecrementar;
 
         return pontuacaoAtual;

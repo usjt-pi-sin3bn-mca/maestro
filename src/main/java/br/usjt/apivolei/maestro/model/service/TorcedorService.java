@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,7 +78,6 @@ public class TorcedorService {
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	public ResponseEntity<?> serSocio(Long id, Torcedor socio, HttpServletRequest request) {
 		if (camposObrigatoriosOK(socio)) {
 			Torcedor torcedor = repo.findById(id).get();
@@ -115,7 +113,6 @@ public class TorcedorService {
 				&& socio.getCpf() != null
 				&& !"".equals(socio.getCpf())
 				&& socio.getDataNascimento() != null
-				&& !"".equals(socio.getDataNascimento())
 				&& socio.getEndereco() != null
 				&& !"".equals(socio.getEndereco())
 				&& ("M".equals(socio.getGenero()) || "F".equals(socio.getGenero()) || "O".equals(socio.getGenero()));
@@ -157,11 +154,12 @@ public class TorcedorService {
 			torcedor.setEmail(torcedorParam.getEmail());
 			
 			if (torcedor.isSocio()) {
-				torcedor.setCelular(torcedorParam.getCelular());
-				torcedor.setCpf(torcedorParam.getCpf());
-				torcedor.setDataNascimento(torcedorParam.getDataNascimento());
-				torcedor.setEndereco(torcedorParam.getEndereco());
-				torcedor.setGenero(torcedorParam.getGenero());
+				torcedor.setCelular(torcedorParam.getCelular() != null ? torcedorParam.getCelular() : torcedor.getCelular());
+				torcedor.setCpf(torcedorParam.getCpf() != null ? torcedorParam.getCpf() : torcedor.getCpf());
+				torcedor.setDataNascimento(torcedorParam.getDataNascimento() != null ? torcedorParam.getDataNascimento() : torcedor.getDataNascimento());
+				torcedor.setEndereco(torcedorParam.getEndereco() != null ? torcedorParam.getEndereco() : torcedor.getEndereco());
+				torcedor.setGenero(torcedorParam.getGenero() != null ? torcedorParam.getGenero() : torcedor.getGenero());
+				torcedor.setPontos(torcedorParam.getPontos() != null ? torcedorParam.getPontos() : torcedor.getPontos());
 			}
 			repo.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Dados alterados", "uri=" + request.getRequestURI()));
