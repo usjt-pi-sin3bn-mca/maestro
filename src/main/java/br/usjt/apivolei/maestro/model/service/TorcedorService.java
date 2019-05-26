@@ -32,7 +32,10 @@ public class TorcedorService {
 		Torcedor t = repo.save(torcedor);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(t.getId()).toUri();
 
-		return ResponseEntity.created(uri).body(this.retorno.build(new Date(), "Cadastro realizado", "uri=" + request.getRequestURI()));
+		Map<String, Long> body = new HashMap<>();
+		body.put("id", repo.findOneByEmail(torcedor.getEmail()).getId());
+		
+		return ResponseEntity.created(uri).body(body);
 	}
 
 	public ResponseEntity<?> logar(Torcedor usuario, HttpServletRequest request) {
