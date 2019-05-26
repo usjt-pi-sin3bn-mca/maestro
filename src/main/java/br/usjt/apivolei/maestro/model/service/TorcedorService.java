@@ -159,6 +159,7 @@ public class TorcedorService {
 				torcedor.setDataNascimento(torcedorParam.getDataNascimento());
 				torcedor.setEndereco(torcedorParam.getEndereco());
 				torcedor.setGenero(torcedorParam.getGenero());
+				torcedor.setPontos(torcedorParam.getPontos());
 			}
 			repo.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Dados alterados", "uri=" + request.getRequestURI()));
