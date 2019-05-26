@@ -44,6 +44,7 @@ public class ConvenioService {
 		convenio.setFone(convenioParam.getFone());
 		convenio.setEmail(convenioParam.getEmail());
 		convenio.setEndereco(convenioParam.getEndereco());
+		convenio.setPontuacaoQRCode(convenioParam.getPontuacaoQRCode());
 		repo.save(convenio);
 
 		return ResponseEntity.ok("Dados alterados");

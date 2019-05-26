@@ -1,10 +1,16 @@
 package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
@@ -39,22 +45,33 @@ public class Torcedor implements Serializable {
 	private String cpf;
 	@Column(name = "datanasc")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private Date dataNascimento;
+	private LocalDate dataNascimento;
 	private String endereco;
 	private String celular;
 	private String genero; // M, F, O
 	private Integer pontos;
+	
+	@Column(name = "dataUltimaPontuacao")
+	private String dataUltimaPontuacao;
 
 	@ManyToMany(mappedBy = "torcedor")
 	private Collection<Experiencia> experiencia;
 
-	public Torcedor(boolean socio, String cpf, Date dataNascimento, String endereco, String celular, String genero) {
+	public Torcedor(@NotBlank String nome, @NotBlank @Email String email, @NotBlank String senha,
+			boolean contaAtiva, boolean socio, String cpf, LocalDate dataNascimento, String endereco, String celular,
+			String genero, Integer pontos, Collection<Experiencia> experiencia) {
+		this.nome = nome;
+		this.email = email;
+		this.senha = senha;
+		this.contaAtiva = contaAtiva;
 		this.socio = socio;
 		this.cpf = cpf;
 		this.dataNascimento = dataNascimento;
 		this.endereco = endereco;
 		this.celular = celular;
 		this.genero = genero;
+		this.pontos = pontos;
+		this.experiencia = experiencia;
 	}
 
 	public Torcedor() {
@@ -108,11 +125,11 @@ public class Torcedor implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public Date getDataNascimento() {
+	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(LocalDate dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -156,6 +173,14 @@ public class Torcedor implements Serializable {
 		this.pontos = pontos;
 	}
 	
+	public String getDataUltimaPontuacao() {
+		return dataUltimaPontuacao;
+	}
+	
+	public void setDataUltimaPontuacao(String dataUltimaPontuacao) {
+		this.dataUltimaPontuacao = dataUltimaPontuacao;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -185,7 +210,8 @@ public class Torcedor implements Serializable {
 	public String toString() {
 		return "Torcedor [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", contaAtiva="
 				+ contaAtiva + ", socio=" + socio + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
-				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos + "]";
+				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos
+				+ ", dataUltimaPontuacao=" + dataUltimaPontuacao + ", experiencia=" + experiencia + "]";
 	}
 
 }

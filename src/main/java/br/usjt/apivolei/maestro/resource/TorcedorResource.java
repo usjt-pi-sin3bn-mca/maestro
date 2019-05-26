@@ -43,7 +43,6 @@ public class TorcedorResource {
 		return ResponseEntity.ok().body(service.getTorcedor(id));
 	}
 
-
 	@PostMapping("/logar")
 	public ResponseEntity<?> logar(@RequestBody Torcedor usuario, HttpServletRequest request) {
 		return service.logar(usuario, request);
@@ -76,8 +75,11 @@ public class TorcedorResource {
 
 	@GetMapping("/pontuacao/{id}")
 	public ResponseEntity<?> getPonto(@PathVariable Long id){
-		Torcedor torcedor = service.buscarTorcedor(id);
-
-		return ResponseEntity.ok(torcedor.getPontos());
+		return ResponseEntity.ok(service.buscarTorcedor(id).getPontos());
+	}
+	
+	@PutMapping("/pontuar/{idConvenio}/{idTorcedor}")
+	public ResponseEntity<?> pontuarComQRCode(@PathVariable Long idConvenio, @PathVariable Long idTorcedor, HttpServletRequest request) {
+		return service.pontuarComQRCode(idConvenio, idTorcedor, request);
 	}
 }
