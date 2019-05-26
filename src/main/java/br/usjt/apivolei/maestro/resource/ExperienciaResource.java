@@ -79,4 +79,25 @@ public class ExperienciaResource {
 
         return ResponseEntity.badRequest().body("O torcedor não possuí pontuação suficiente para adquirir a experiência");
     }
+    public ResponseEntity<?> cancelar(@PathVariable Long idExperiencia, @PathVariable Long idTorcedor, HttpServletRequest request){
+    	boolean experienciaRemovida = false;
+    	
+    	try {
+    		Torcedor torcedor = torcedorExperienciaService.buscarTorcedor(idTorcedor);
+            Experiencia experiencia = experienciaService.buscar(idExperiencia);
+            
+            experienciaRemovida = experienciaService.cancelar(experiencia, torcedor);
+            
+		} catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            return ResponseEntity.badRequest().body("Ocorreu um erro ao cancelar experiência, tente novamente!");
+		}
+        if(experienciaRemovida){
+            return ResponseEntity.ok("Experiência removida");
+        }else{
+            return ResponseEntity.badRequest().body("O torcedor não possuí experiencia para cancelar");
+        }
+    	
+    }
 }
