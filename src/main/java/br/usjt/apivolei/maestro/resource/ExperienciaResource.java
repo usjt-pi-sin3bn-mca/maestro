@@ -79,7 +79,8 @@ public class ExperienciaResource {
 
         return ResponseEntity.badRequest().body("O torcedor não possuí pontuação suficiente para adquirir a experiência");
     }
-    public ResponseEntity<?> cancelar(@PathVariable Long idExperiencia, @PathVariable Long idTorcedor, HttpServletRequest request){
+    
+    public ResponseEntity<?> cancelar(@PathVariable Long idExperiencia, @PathVariable Long idTorcedor){
     	boolean experienciaRemovida = false;
     	
     	try {

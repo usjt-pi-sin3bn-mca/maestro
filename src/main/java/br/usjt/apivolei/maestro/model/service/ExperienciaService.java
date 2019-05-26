@@ -121,8 +121,8 @@ public class ExperienciaService {
 		if(torcedorRemovido) {
 			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() + 1);
 			
-			IPonto pontoTorcedor = new PontoTorcedor(torcedor.getPontos().doubleValue());
-			pontoTorcedor.incrementar(experiencia.getCusto());
+			IPontoTorcedor pontoTorcedor = new PontoTorcedorImpl(torcedor.getPontos());
+			torcedor.setPontos(pontoTorcedor.incrementar(experiencia.getCusto()));
 			
 			salvar(experiencia);
 			
