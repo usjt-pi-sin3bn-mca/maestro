@@ -60,7 +60,8 @@ public class TorcedorService {
 	}
 
 	public Torcedor buscarTorcedor(Long id) {
-		return repo.findByContaAtiva(id, true).orElseThrow(NoSuchElementException::new);
+//		return repo.findByContaAtiva(id, true).orElseThrow(NoSuchElementException::new);
+		return repo.findById(id).get();
 	}
 
 	public ResponseEntity<?> souSocio(Long id, HttpServletRequest request) {
