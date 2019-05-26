@@ -154,12 +154,12 @@ public class TorcedorService {
 			torcedor.setEmail(torcedorParam.getEmail());
 			
 			if (torcedor.isSocio()) {
-				torcedor.setCelular(torcedorParam.getCelular());
-				torcedor.setCpf(torcedorParam.getCpf());
-				torcedor.setDataNascimento(torcedorParam.getDataNascimento());
-				torcedor.setEndereco(torcedorParam.getEndereco());
-				torcedor.setGenero(torcedorParam.getGenero());
-				torcedor.setPontos(torcedorParam.getPontos());
+				torcedor.setCelular(torcedorParam.getCelular() != null ? torcedorParam.getCelular() : torcedor.getCelular());
+				torcedor.setCpf(torcedorParam.getCpf() != null ? torcedorParam.getCpf() : torcedor.getCpf());
+				torcedor.setDataNascimento(torcedorParam.getDataNascimento() != null ? torcedorParam.getDataNascimento() : torcedor.getDataNascimento());
+				torcedor.setEndereco(torcedorParam.getEndereco() != null ? torcedorParam.getEndereco() : torcedor.getEndereco());
+				torcedor.setGenero(torcedorParam.getGenero() != null ? torcedorParam.getGenero() : torcedor.getGenero());
+				torcedor.setPontos(torcedorParam.getPontos() != null ? torcedorParam.getPontos() : torcedor.getPontos());
 			}
 			repo.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Dados alterados", "uri=" + request.getRequestURI()));
