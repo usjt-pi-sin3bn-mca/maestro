@@ -49,7 +49,7 @@ public class TorcedorService {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(t.getId()).toUri();
 
 		Map<String, Long> body = new HashMap<>();
-		body.put("id", repo.findOneByEmail(torcedor.getEmail()).getId());
+		body.put("id", repTorcedor.findOneByEmail(torcedor.getEmail()).getId());
 		
 		return ResponseEntity.created(uri).body(body);
 	}
