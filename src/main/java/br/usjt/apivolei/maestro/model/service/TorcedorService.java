@@ -228,6 +228,6 @@ public class TorcedorService {
 		}
 
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(),
-				"Verifique se o torcedor está ativo ou se o mesmo é um sócio", "uri=" + request.getRequestURI()));
+				"Torcedor não está ativo, não é sócio ou já pontuou hoje", "uri=" + request.getRequestURI()));
 	}
 }
