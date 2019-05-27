@@ -1,8 +1,10 @@
 package br.usjt.apivolei.maestro.model.service;
 
 import java.net.URI;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -106,7 +108,7 @@ public class TorcedorService {
 					torcedor.setEndereco(socio.getEndereco());
 					torcedor.setCelular(socio.getCelular());
 					torcedor.setGenero(socio.getGenero());
-					torcedor.setDataUltimaPontuacao("00/00/0000");
+					torcedor.setDataUltimaPontuacao(socio.getDataNascimento());
 					torcedor.setPontos(0);
 					repTorcedor.save(torcedor);
 					
@@ -202,40 +204,30 @@ public class TorcedorService {
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
 	}
 	
-	@SuppressWarnings("deprecation")
 	public ResponseEntity<?> pontuarComQRCode(Long idConvenio, Long idTorcedor, HttpServletRequest request) {
 
 		Torcedor torcedor = repTorcedor.findById(idTorcedor).get();
 		Convenio convenio = repConvenio.findById(idConvenio).get();
 
-		Integer dia = null;
-		Integer mes = null;
+		DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT);
+		Calendar c = Calendar.getInstance();
+		String dataUltimaPontucao = f.format(torcedor.getDataUltimaPontuacao().getTime());
+		String dataAtual = f.format(c.getTime());
+		
+		if (torcedor.isContaAtiva() 
+				&& torcedor.isSocio()
+					&& !dataUltimaPontucao.equals(dataAtual)) {
 
-		if (torcedor.isContaAtiva() && torcedor.isSocio()) {
-			try {
-				dia = sdf.parse(torcedor.getDataUltimaPontuacao()).getDay();
-				mes = sdf.parse(torcedor.getDataUltimaPontuacao()).getMonth();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-
-			if (validateDate(dia, mes)) {
 				IPontoTorcedor pontos = new PontoTorcedorImpl(torcedor.getPontos());
 				torcedor.setPontos(pontos.incrementar(convenio.getPontuacaoQRCode()));
-				torcedor.setDataUltimaPontuacao(sdf.format(new Date()));
+				torcedor.setDataUltimaPontuacao(c);
+				
 				repTorcedor.save(torcedor);
 				return ResponseEntity.ok(this.retorno.build(new Date(), "Pontuação incrementada na conta do torcedor",
 						"uri=" + request.getRequestURI()));
-			}
 		}
 
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(),
 				"Verifique se o torcedor está ativo ou se o mesmo é um sócio", "uri=" + request.getRequestURI()));
-	}
-	
-	@SuppressWarnings("deprecation")
-	private boolean validateDate(int dia, int mes) {
-		Date hoje = new Date();	
-		return hoje.getDay() != dia && hoje.getMonth() != mes;
 	}
 }
