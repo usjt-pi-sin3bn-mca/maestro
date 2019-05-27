@@ -1,7 +1,7 @@
 package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Collection;
 
 import javax.persistence.Column;
@@ -32,7 +32,7 @@ public class Torcedor implements Serializable {
 	private String nome;
 	@NotBlank
 	@Email
-	@Column(unique=true)
+	@Column(name = "email", unique = true)
 	private String email;
 	@NotBlank
 	@JsonProperty("senha")
@@ -41,41 +41,24 @@ public class Torcedor implements Serializable {
 	private boolean contaAtiva;
 	// dados de um socio torcedor
 	private boolean socio;
-	@Column(unique=true)
+	@Column(name = "cpf", unique = true)
 	private String cpf;
 	@Column(name = "datanasc")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private LocalDate dataNascimento;
+	private Calendar dataNascimento;
 	private String endereco;
 	private String celular;
 	private String genero; // M, F, O
 	private Integer pontos;
 	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
 	@Column(name = "dataUltimaPontuacao")
-	private String dataUltimaPontuacao;
+	private Calendar dataUltimaPontuacao;
 
 	@ManyToMany(mappedBy = "torcedor")
 	private Collection<Experiencia> experiencia;
 
-	public Torcedor(@NotBlank String nome, @NotBlank @Email String email, @NotBlank String senha,
-			boolean contaAtiva, boolean socio, String cpf, LocalDate dataNascimento, String endereco, String celular,
-			String genero, Integer pontos, Collection<Experiencia> experiencia) {
-		this.nome = nome;
-		this.email = email;
-		this.senha = senha;
-		this.contaAtiva = contaAtiva;
-		this.socio = socio;
-		this.cpf = cpf;
-		this.dataNascimento = dataNascimento;
-		this.endereco = endereco;
-		this.celular = celular;
-		this.genero = genero;
-		this.pontos = pontos;
-		this.experiencia = experiencia;
-	}
-
-	public Torcedor() {
-	}
+	public Torcedor() {}
 
 	public Long getId() {
 		return id;
@@ -125,11 +108,11 @@ public class Torcedor implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public LocalDate getDataNascimento() {
+	public Calendar getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(LocalDate dataNascimento) {
+	public void setDataNascimento(Calendar dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -173,11 +156,11 @@ public class Torcedor implements Serializable {
 		this.pontos = pontos;
 	}
 	
-	public String getDataUltimaPontuacao() {
+	public Calendar getDataUltimaPontuacao() {
 		return dataUltimaPontuacao;
 	}
 	
-	public void setDataUltimaPontuacao(String dataUltimaPontuacao) {
+	public void setDataUltimaPontuacao(Calendar dataUltimaPontuacao) {
 		this.dataUltimaPontuacao = dataUltimaPontuacao;
 	}
 	
