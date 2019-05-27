@@ -62,11 +62,21 @@ public class Administrador implements Serializable {
         this.email = email;
     }
 
-    public boolean isAtivo() {
+    public boolean getAtivo() {
         return ativo;
     }
 
     public void setAtivo(boolean ativo) {
         this.ativo = ativo;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Administrador{" +
+                "id=" + id +
+                ", usuario='" + usuario + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
