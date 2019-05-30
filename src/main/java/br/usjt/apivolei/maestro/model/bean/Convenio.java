@@ -135,5 +135,4 @@ public class Convenio {
 			return false;
 		return true;
 	}
-	
 }
