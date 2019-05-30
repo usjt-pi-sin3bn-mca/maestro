@@ -1,9 +1,14 @@
 package br.usjt.apivolei.maestro.model.service;
 
 import java.net.URI;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,34 +19,46 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import br.usjt.apivolei.maestro.model.bean.Convenio;
 import br.usjt.apivolei.maestro.model.bean.DetalhesRetorno;
 import br.usjt.apivolei.maestro.model.bean.Torcedor;
+import br.usjt.apivolei.maestro.model.interfaces.IPontoTorcedor;
+import br.usjt.apivolei.maestro.model.interfaces.PontoTorcedorImpl;
+import br.usjt.apivolei.maestro.model.repository.ConvenioRepository;
 import br.usjt.apivolei.maestro.model.repository.TorcedorRepository;
 
 @Service
 public class TorcedorService {
 
+	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	
 	@Autowired
 	private DetalhesRetorno retorno;
 	
 	@Autowired
-	private TorcedorRepository repo;
+	private TorcedorRepository repTorcedor;
+
+	@Autowired
+	private ConvenioRepository repConvenio;
 
 	public ResponseEntity<?> cadastrar(Torcedor torcedor, HttpServletRequest request) {
 
 		torcedor.setContaAtiva(true);
 		torcedor.setSocio(false);
-		Torcedor t = repo.save(torcedor);
+		Torcedor t = repTorcedor.save(torcedor);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(t.getId()).toUri();
 
-		return ResponseEntity.created(uri).body(this.retorno.build(new Date(), "Cadastro realizado", "uri=" + request.getRequestURI()));
+		Map<String, Long> body = new HashMap<>();
+		body.put("id", repTorcedor.findOneByEmail(torcedor.getEmail()).getId());
+		
+		return ResponseEntity.created(uri).body(body);
 	}
 
 	public ResponseEntity<?> logar(Torcedor usuario, HttpServletRequest request) {
 		
 		if (usuario.getEmail() != null && usuario.getSenha() != null) {
 			
-			Torcedor torcedor = repo.findOneByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
+			Torcedor torcedor = repTorcedor.findOneByEmailAndSenha(usuario.getEmail(), usuario.getSenha());
 			
 			if (torcedor != null) {
 				
@@ -58,32 +75,31 @@ public class TorcedorService {
 	}
 
 	public ResponseEntity<?> getTorcedor(Long id) {
-		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON.toString()).body(repo.findById(id).get());
+		return ResponseEntity.ok().header("Content-Type", MediaType.APPLICATION_JSON.toString()).body(repTorcedor.findById(id).get());
 	}
 
 	public Torcedor buscarTorcedor(Long id) {
-		return repo.findById(id).get();
+		return repTorcedor.findByIdAndContaAtiva(id, true).orElseThrow(NoSuchElementException::new);
 	}
 
 	public ResponseEntity<?> souSocio(Long id, HttpServletRequest request) {
 		
-		Torcedor torcedor = repo.findById(id).get();
+		Torcedor torcedor = repTorcedor.findById(id).get();
 		
 		if (torcedor.isContaAtiva()) {
 			
 			Map<String, Object> retorno = new HashMap<String, Object>();
 			retorno.put("id", id);
-			retorno.put("socio", repo.findById(id).get().isSocio());
+			retorno.put("socio", repTorcedor.findById(id).get().isSocio());
 			return ResponseEntity.ok(retorno);
 		}
 		
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
 	}
 
-	@SuppressWarnings("unlikely-arg-type")
 	public ResponseEntity<?> serSocio(Long id, Torcedor socio, HttpServletRequest request) {
 		if (camposObrigatoriosOK(socio)) {
-			Torcedor torcedor = repo.findById(id).get();
+			Torcedor torcedor = repTorcedor.findById(id).get();
 			
 			if (torcedor.isContaAtiva()) {
 
@@ -95,8 +111,9 @@ public class TorcedorService {
 					torcedor.setEndereco(socio.getEndereco());
 					torcedor.setCelular(socio.getCelular());
 					torcedor.setGenero(socio.getGenero());
+					torcedor.setDataUltimaPontuacao(socio.getDataNascimento());
 					torcedor.setPontos(0);
-					repo.save(torcedor);
+					repTorcedor.save(torcedor);
 					
 					return ResponseEntity.ok(this.retorno.build(new Date(), "Sucesso", "uri=" + request.getRequestURI()));
 				} else {
@@ -116,7 +133,6 @@ public class TorcedorService {
 				&& socio.getCpf() != null
 				&& !"".equals(socio.getCpf())
 				&& socio.getDataNascimento() != null
-				&& !"".equals(socio.getDataNascimento())
 				&& socio.getEndereco() != null
 				&& !"".equals(socio.getEndereco())
 				&& ("M".equals(socio.getGenero()) || "F".equals(socio.getGenero()) || "O".equals(socio.getGenero()));
@@ -124,11 +140,11 @@ public class TorcedorService {
 
 	public ResponseEntity<?> desativarConta(Long id, HttpServletRequest request) {
 		
-		Torcedor torcedor = repo.findById(id).get();
+		Torcedor torcedor = repTorcedor.findById(id).get();
 		
 		if (torcedor.isContaAtiva()) {
 			torcedor.setContaAtiva(false);
-			repo.save(torcedor);
+			repTorcedor.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Sucesso, conta desativada", "uri=" + request.getRequestURI()));
 		}
 		
@@ -137,11 +153,11 @@ public class TorcedorService {
 
 	public ResponseEntity<?> ativarConta(Long id, HttpServletRequest request) {
 		
-		Torcedor torcedor = repo.findById(id).get();
+		Torcedor torcedor = repTorcedor.findById(id).get();
 		
 		if (!torcedor.isContaAtiva()) {
 			torcedor.setContaAtiva(true);
-			repo.save(torcedor);
+			repTorcedor.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Sucesso, conta ativada", "uri=" + request.getRequestURI()));
 		}
 		
@@ -150,7 +166,7 @@ public class TorcedorService {
 
 	public ResponseEntity<?> alterarDados(Long id, Torcedor torcedorParam, HttpServletRequest request) {
 		
-		Torcedor torcedor = repo.findById(id).get();
+		Torcedor torcedor = repTorcedor.findById(id).get();
 		
 		if (torcedor.isContaAtiva()) {
 			
@@ -158,13 +174,14 @@ public class TorcedorService {
 			torcedor.setEmail(torcedorParam.getEmail());
 			
 			if (torcedor.isSocio()) {
-				torcedor.setCelular(torcedorParam.getCelular());
-				torcedor.setCpf(torcedorParam.getCpf());
-				torcedor.setDataNascimento(torcedorParam.getDataNascimento());
-				torcedor.setEndereco(torcedorParam.getEndereco());
-				torcedor.setGenero(torcedorParam.getGenero());
+				torcedor.setCelular(torcedorParam.getCelular() != null ? torcedorParam.getCelular() : torcedor.getCelular());
+				torcedor.setCpf(torcedorParam.getCpf() != null ? torcedorParam.getCpf() : torcedor.getCpf());
+				torcedor.setDataNascimento(torcedorParam.getDataNascimento() != null ? torcedorParam.getDataNascimento() : torcedor.getDataNascimento());
+				torcedor.setEndereco(torcedorParam.getEndereco() != null ? torcedorParam.getEndereco() : torcedor.getEndereco());
+				torcedor.setGenero(torcedorParam.getGenero() != null ? torcedorParam.getGenero() : torcedor.getGenero());
+				torcedor.setPontos(torcedorParam.getPontos() != null ? torcedorParam.getPontos() : torcedor.getPontos());
 			}
-			repo.save(torcedor);
+			repTorcedor.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Dados alterados", "uri=" + request.getRequestURI()));
 		}
 
@@ -172,21 +189,48 @@ public class TorcedorService {
 	}
 
 	public ResponseEntity<?> excluir(Long id, HttpServletRequest request) {
-		repo.delete(repo.findById(id).get());
+		repTorcedor.delete(repTorcedor.findById(id).get());
 		return ResponseEntity.ok(this.retorno.build(new Date(), "Objeto excluído", "uri=" + request.getRequestURI()));
 	}
 
 	public ResponseEntity<?> naoSerSocio(Long id, HttpServletRequest request) {
 
-		Torcedor torcedor = repo.findById(id).get();
+		Torcedor torcedor = repTorcedor.findById(id).get();
 
 		if (torcedor.isContaAtiva()) {
 
 			torcedor.setSocio(false);
-			repo.save(torcedor);
+			repTorcedor.save(torcedor);
 			return ResponseEntity.ok(this.retorno.build(new Date(), "Sucesso", "uri=" + request.getRequestURI()));
 		}
 		
 		return ResponseEntity.badRequest().body(this.retorno.build(new Date(), "A conta está desativada", "uri="+request.getRequestURI()));
+	}
+	
+	public ResponseEntity<?> pontuarComQRCode(Long idConvenio, Long idTorcedor, HttpServletRequest request) {
+
+		Torcedor torcedor = repTorcedor.findById(idTorcedor).get();
+		Convenio convenio = repConvenio.findById(idConvenio).get();
+
+		DateFormat f = DateFormat.getDateInstance(DateFormat.SHORT);
+		Calendar c = Calendar.getInstance();
+		String dataUltimaPontucao = f.format(torcedor.getDataUltimaPontuacao().getTime());
+		String dataAtual = f.format(c.getTime());
+		
+		if (torcedor.isContaAtiva() 
+				&& torcedor.isSocio()
+					&& !dataUltimaPontucao.equals(dataAtual)) {
+
+				IPontoTorcedor pontos = new PontoTorcedorImpl(torcedor.getPontos());
+				torcedor.setPontos(pontos.incrementar(convenio.getPontuacaoQRCode()));
+				torcedor.setDataUltimaPontuacao(c);
+				
+				repTorcedor.save(torcedor);
+				return ResponseEntity.ok(this.retorno.build(new Date(), "Pontuação incrementada na conta do torcedor",
+						"uri=" + request.getRequestURI()));
+		}
+
+		return ResponseEntity.badRequest().body(this.retorno.build(new Date(),
+				"Torcedor não está ativo, não é sócio ou já pontuou hoje", "uri=" + request.getRequestURI()));
 	}
 }

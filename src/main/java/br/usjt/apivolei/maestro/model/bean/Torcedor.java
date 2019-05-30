@@ -1,13 +1,20 @@
 package br.usjt.apivolei.maestro.model.bean;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,7 +32,7 @@ public class Torcedor implements Serializable {
 	private String nome;
 	@NotBlank
 	@Email
-	@Column(unique=true)
+	@Column(name = "email", unique = true)
 	private String email;
 	@NotBlank
 	@JsonProperty("senha")
@@ -34,29 +41,24 @@ public class Torcedor implements Serializable {
 	private boolean contaAtiva;
 	// dados de um socio torcedor
 	private boolean socio;
-	@Column(unique=true)
+	@Column(name = "cpf", unique = true)
 	private String cpf;
 	@Column(name = "datanasc")
-	private Date dataNascimento;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	private Calendar dataNascimento;
 	private String endereco;
 	private String celular;
 	private String genero; // M, F, O
 	private Integer pontos;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+	@Column(name = "dataUltimaPontuacao")
+	private Calendar dataUltimaPontuacao;
 
 	@ManyToMany(mappedBy = "torcedor")
 	private Collection<Experiencia> experiencia;
 
-	public Torcedor(boolean socio, String cpf, Date dataNascimento, String endereco, String celular, String genero) {
-		this.socio = socio;
-		this.cpf = cpf;
-		this.dataNascimento = dataNascimento;
-		this.endereco = endereco;
-		this.celular = celular;
-		this.genero = genero;
-	}
-
-	public Torcedor() {
-	}
+	public Torcedor() {}
 
 	public Long getId() {
 		return id;
@@ -106,11 +108,11 @@ public class Torcedor implements Serializable {
 		this.cpf = cpf;
 	}
 
-	public Date getDataNascimento() {
+	public Calendar getDataNascimento() {
 		return dataNascimento;
 	}
 
-	public void setDataNascimento(Date dataNascimento) {
+	public void setDataNascimento(Calendar dataNascimento) {
 		this.dataNascimento = dataNascimento;
 	}
 
@@ -154,6 +156,14 @@ public class Torcedor implements Serializable {
 		this.pontos = pontos;
 	}
 	
+	public Calendar getDataUltimaPontuacao() {
+		return dataUltimaPontuacao;
+	}
+	
+	public void setDataUltimaPontuacao(Calendar dataUltimaPontuacao) {
+		this.dataUltimaPontuacao = dataUltimaPontuacao;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -183,7 +193,8 @@ public class Torcedor implements Serializable {
 	public String toString() {
 		return "Torcedor [id=" + id + ", nome=" + nome + ", email=" + email + ", senha=" + senha + ", contaAtiva="
 				+ contaAtiva + ", socio=" + socio + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
-				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos + "]";
+				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos
+				+ ", dataUltimaPontuacao=" + dataUltimaPontuacao + ", experiencia=" + experiencia + "]";
 	}
 
 }

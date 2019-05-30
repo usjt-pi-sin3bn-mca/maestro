@@ -5,8 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import br.usjt.apivolei.maestro.model.bean.Torcedor;
-import br.usjt.apivolei.maestro.interfaces.CalculoPontuacao;
-import br.usjt.apivolei.maestro.interfaces.IPonto;
+import br.usjt.apivolei.maestro.model.interfaces.IPontoTorcedor;
+import br.usjt.apivolei.maestro.model.interfaces.PontoTorcedorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ExperienciaService {
 		try{
 			experiencia.setAtivo(true);
 
-			expeRepo.save(experiencia);
+			salvar(experiencia);
 		}catch(Exception e){
 			e.printStackTrace();
 			System.out.println(e.getMessage());
@@ -75,29 +75,32 @@ public class ExperienciaService {
 		return ResponseEntity.ok("Experiência deletada com sucesso");
 	}
 	
-	public void alterarExperiencia(Long id, Experiencia experienciaParam, HttpServletRequest request) {
+	public void alterarExperiencia(Long id, Experiencia experienciaParam) {
 		try {
 			Experiencia experiencia = expeRepo.findById(id).get();
+			
 			experiencia.setNome(experienciaParam.getNome());
 			experiencia.setData(experienciaParam.getData());
 			experiencia.setDescricao(experienciaParam.getDescricao());
 			experiencia.setLocal(experienciaParam.getLocal());
 
-			expeRepo.save(experiencia);
-		}catch (Exception e){
+			salvar(experiencia);
+		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println(e.getMessage());
 
 			throw e;
 		}
 	}
 
 	public boolean adquirir(Experiencia experiencia, Torcedor torcedor) {
-		if(torcedor.getPontos() > experiencia.getCusto()) {
-			IPonto calculoPontuacao = new CalculoPontuacao(torcedor.getPontos().doubleValue());
-
-			torcedor.setPontos(calculoPontuacao.decrementar(experiencia.getCusto()).intValue());
-
+		
+		if (torcedor.isContaAtiva() 
+				&& torcedor.isSocio() 
+					&& experiencia.getQtdDisponivel() > 0
+						&& torcedor.getPontos() >= experiencia.getCusto()) {
+			IPontoTorcedor pontoTorcedor = new PontoTorcedorImpl(torcedor.getPontos());
+			
+			torcedor.setPontos(pontoTorcedor.decrementar(experiencia.getCusto()));
 			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() - 1);
 
 			if(experiencia.getQtdDisponivel() == 0){
@@ -105,12 +108,32 @@ public class ExperienciaService {
 			}
 
 			experiencia.addTorcedor(torcedor);
-			expeRepo.save(experiencia);
-
+			salvar(experiencia);
 			return true;
 		}
-		else{
+
+		return false;
+	}
+	
+	public boolean cancelar(Experiencia experiencia, Torcedor torcedor) {
+		boolean torcedorRemovido = experiencia.removeTorcedor(torcedor);
+		
+		if(torcedorRemovido) {
+			experiencia.setQtdDisponivel(experiencia.getQtdDisponivel() + 1);
+			
+			IPontoTorcedor pontoTorcedor = new PontoTorcedorImpl(torcedor.getPontos());
+			torcedor.setPontos(pontoTorcedor.incrementar(experiencia.getCusto()));
+			
+			salvar(experiencia);
+			
+			return true;
+		}else {
 			return false;
 		}
+		
+	}
+
+	public Experiencia salvar(Experiencia experiencia){
+		return expeRepo.save(experiencia);
 	}
 }

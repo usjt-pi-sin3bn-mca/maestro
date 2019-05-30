@@ -9,10 +9,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.stereotype.Component;
 
 @Entity
-@Component
 @Table(name = "tb_experiencia")
 public class Experiencia implements  Serializable {
 	
@@ -29,7 +27,7 @@ public class Experiencia implements  Serializable {
 
 	@Column
 	@NotNull
-	private Double custo;
+	private Integer custo;
 
 	@Column
     @NotBlank
@@ -59,10 +57,10 @@ public class Experiencia implements  Serializable {
 		this.data = data;
 	}
 
-	public Double getCusto() {
+	public Integer getCusto() {
 		return custo;
 	}
-	public void setCusto(Double custo) {
+	public void setCusto(Integer custo) {
 		this.custo = custo;
 	}
 
@@ -101,12 +99,26 @@ public class Experiencia implements  Serializable {
 		this.ativo = ativo;
 	}
 
-	public List<Torcedor> getTorcedor() {
+	public List<Torcedor> getTorcedorList() {
 		return torcedor;
+	}
+	public Torcedor getTorcedor(Torcedor torcedor) {
+		for(Torcedor t : this.torcedor) {
+			if(t.equals(torcedor)) {
+				return t;	
+			}
+		}
+		
+		return null;
 	}
 	public void addTorcedor(Torcedor torcedor) {
 		this.torcedor.add(torcedor);
 	}
+	public boolean removeTorcedor(Torcedor torcedorRemover) {
+		return this.torcedor.removeIf(torcedor -> torcedor.equals(torcedorRemover));
+			
+	}
+	
 
 	@Override
 	public int hashCode() {
