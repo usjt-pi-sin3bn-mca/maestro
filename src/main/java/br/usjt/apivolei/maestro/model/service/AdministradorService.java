@@ -23,7 +23,7 @@ public class AdministradorService {
 
     public boolean buscar(Administrador administrador){
         return administradorRepository
-                .findByUsuarioAndSenhaAndAtivo(administrador.getUsuario(), administrador.getSenha(), true)
+                .findByEmailAndSenhaAndAtivo(administrador.getEmail(), administrador.getSenha(), true)
                 .isPresent();
     }
 
@@ -31,7 +31,6 @@ public class AdministradorService {
         administrador.setEmail(administradorNovo.getEmail());
         administrador.setSenha(administradorNovo.getSenha());
         administrador.setAtivo(administradorNovo.getAtivo());
-        administrador.setUsuario(administradorNovo.getUsuario());
         
         salvar(administrador);
     }

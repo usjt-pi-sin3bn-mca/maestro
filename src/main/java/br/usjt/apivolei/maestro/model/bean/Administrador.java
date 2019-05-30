@@ -15,11 +15,6 @@ public class Administrador implements Serializable {
 
     @Id
     private Long id;
-
-    @NotBlank
-    @Column(unique = true)
-    private String usuario;
-
     @NotBlank
     private String senha;
 
@@ -36,14 +31,6 @@ public class Administrador implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
     }
 
     public String getSenha() {
@@ -75,7 +62,6 @@ public class Administrador implements Serializable {
     public String toString() {
         return "Administrador{" +
                 "id=" + id +
-                ", usuario='" + usuario + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }
