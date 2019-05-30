@@ -31,7 +31,8 @@ public class AdministradorService {
         administrador.setEmail(administradorNovo.getEmail());
         administrador.setSenha(administradorNovo.getSenha());
         administrador.setAtivo(administradorNovo.getAtivo());
-
+        administrador.setUsuario(administradorNovo.getUsuario());
+        
         salvar(administrador);
     }
 

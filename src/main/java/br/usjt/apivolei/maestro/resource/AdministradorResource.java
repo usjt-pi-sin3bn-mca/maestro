@@ -49,9 +49,21 @@ public class AdministradorResource {
     public ResponseEntity desativar(@PathVariable Long id){
         Administrador administrador = administradorService.buscar(id);
         administrador.setAtivo(false);
+        
         administradorService.salvar(administrador);
 
         return ResponseEntity.ok("Administrador desativado");
+    }
+    
+    @PutMapping(value = "/ativar/{id}")
+    public ResponseEntity ativar(@PathVariable Long id) {
+    	Administrador administrador = administradorService.buscar(id);
+    	
+    	administrador.setAtivo(true);
+    	
+    	administradorService.salvar(administrador);
+    	
+    	return ResponseEntity.ok("Administrador ativado");
     }
 
     @PostMapping(value = "/login")
