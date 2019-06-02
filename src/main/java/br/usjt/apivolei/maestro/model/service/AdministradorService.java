@@ -13,7 +13,6 @@ public class AdministradorService {
     private AdministradorRepository administradorRepository;
 
     public Administrador cadastrar(Administrador administrador) {
-        administrador.setAtivo(true);
         return salvar(administrador);
     }
 
@@ -21,16 +20,10 @@ public class AdministradorService {
         return administradorRepository.findById(id).orElseThrow(NoSuchElementException::new);
     }
 
-    public boolean buscar(Administrador administrador){
-        return administradorRepository
-                .findByEmailAndSenhaAndAtivo(administrador.getEmail(), administrador.getSenha(), true)
-                .isPresent();
-    }
-
     public void alterar(Administrador administrador, Administrador administradorNovo) {
         administrador.setEmail(administradorNovo.getEmail());
         administrador.setSenha(administradorNovo.getSenha());
-        administrador.setAtivo(administradorNovo.getAtivo());
+        administrador.setNome(administradorNovo.getNome());
         
         salvar(administrador);
     }
