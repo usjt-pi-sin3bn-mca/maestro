@@ -9,18 +9,16 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
 @Entity
 @Table(name = "tb_administrador")
 @JsonIgnoreProperties(value = { "senha" }, allowSetters = true)
 public class Administrador implements Serializable {
-    
-	private static final long serialVersionUID = 1L;
+
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,98 +34,7 @@ public class Administrador implements Serializable {
     @Email
     private String email;
 
-	@Column(columnDefinition = "boolean default true", name = "ativo")
-	private boolean contaAtiva;
-	// dados de um socio torcedor
-	@Column(columnDefinition = "boolean default false")
-	private boolean socio;
-	@Column(name = "cpf", unique = true)
-	private String cpf;
-	@Column(name = "datanasc")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	private Calendar dataNascimento;
-	private String endereco;
-	private String celular;
-	private String genero; // M, F, O
-	private Integer pontos;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-	@Column(name = "dataUltimaPontuacao")
-	private Calendar dataUltimaPontuacao;
-
-    public boolean isContaAtiva() {
-		return contaAtiva;
-	}
-
-	public void setContaAtiva(boolean contaAtiva) {
-		this.contaAtiva = contaAtiva;
-	}
-
-	public boolean isSocio() {
-		return socio;
-	}
-
-	public void setSocio(boolean socio) {
-		this.socio = socio;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-	public Calendar getDataNascimento() {
-		return dataNascimento;
-	}
-
-	public void setDataNascimento(Calendar dataNascimento) {
-		this.dataNascimento = dataNascimento;
-	}
-
-	public String getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(String endereco) {
-		this.endereco = endereco;
-	}
-
-	public String getCelular() {
-		return celular;
-	}
-
-	public void setCelular(String celular) {
-		this.celular = celular;
-	}
-
-	public String getGenero() {
-		return genero;
-	}
-
-	public void setGenero(String genero) {
-		this.genero = genero;
-	}
-
-	public Integer getPontos() {
-		return pontos;
-	}
-
-	public void setPontos(Integer pontos) {
-		this.pontos = pontos;
-	}
-
-	public Calendar getDataUltimaPontuacao() {
-		return dataUltimaPontuacao;
-	}
-
-	public void setDataUltimaPontuacao(Calendar dataUltimaPontuacao) {
-		this.dataUltimaPontuacao = dataUltimaPontuacao;
-	}
-
-	public Long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -161,10 +68,7 @@ public class Administrador implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Administrador [id=" + id + ", nome=" + nome + ", senha=" + senha + ", email=" + email + ", contaAtiva="
-				+ contaAtiva + ", socio=" + socio + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
-				+ ", endereco=" + endereco + ", celular=" + celular + ", genero=" + genero + ", pontos=" + pontos
-				+ ", dataUltimaPontuacao=" + dataUltimaPontuacao + "]";
+		return "Administrador [id=" + id + ", nome=" + nome + ", senha=" + senha + ", email=" + email + "]";
 	}
 
 	@Override
@@ -190,6 +94,5 @@ public class Administrador implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
-    
+	}    
 }
