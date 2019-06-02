@@ -8,16 +8,23 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 @Entity
 @Table(name = "tb_administrador")
+@JsonIgnoreProperties(value = { "senha" }, allowSetters = true)
 public class Administrador implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String nome;
+    
     @NotBlank
     private String senha;
 
@@ -25,8 +32,6 @@ public class Administrador implements Serializable {
     @Column(unique = true)
     @Email
     private String email;
-
-    private boolean ativo;
 
     public Long getId() {
         return id;
@@ -51,21 +56,43 @@ public class Administrador implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+    
+    public String getNome() {
+		return nome;
+	}
+    
+    public void setNome(String nome) {
+		this.nome = nome;
+	}
 
-    public boolean getAtivo() {
-        return ativo;
-    }
+	@Override
+	public String toString() {
+		return "Administrador [id=" + id + ", nome=" + nome + ", senha=" + senha + ", email=" + email + "]";
+	}
 
-    public void setAtivo(boolean ativo) {
-        this.ativo = ativo;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
 
-
-    @Override
-    public String toString() {
-        return "Administrador{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                '}';
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Administrador other = (Administrador) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+    
 }
