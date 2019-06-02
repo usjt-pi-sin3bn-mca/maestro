@@ -58,7 +58,7 @@ public class ExperienciaResource {
         return ResponseEntity.ok(experiencia);
     }
 
-    @GetMapping(value = "/adquirir/{idExperiencia}/{idTorcedor}")
+    @PutMapping(value = "/adquirir/{idExperiencia}/{idTorcedor}")
     public ResponseEntity<?> adquirir(@PathVariable Long idExperiencia, @PathVariable Long idTorcedor){
         
     	boolean experienciaAdquirida = false;
