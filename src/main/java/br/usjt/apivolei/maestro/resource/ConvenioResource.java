@@ -22,7 +22,7 @@ public class ConvenioResource {
 	@Autowired
 	private ConvenioService service;
 	
-	@PostMapping()
+	@PostMapping
 	public ResponseEntity<?> cadastrar(@RequestBody Convenio convenio, HttpServletRequest request) {
 		return service.cadastrar(convenio, request);
 	}
