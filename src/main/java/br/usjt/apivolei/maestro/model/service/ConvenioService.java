@@ -2,17 +2,18 @@ package br.usjt.apivolei.maestro.model.service;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import br.usjt.apivolei.maestro.model.bean.DetalhesRetorno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.usjt.apivolei.maestro.model.bean.Convenio;
+import br.usjt.apivolei.maestro.model.bean.DetalhesRetorno;
 import br.usjt.apivolei.maestro.model.repository.ConvenioRepository;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Service
 public class ConvenioService {
@@ -56,4 +57,7 @@ public class ConvenioService {
 		return ResponseEntity.ok(convenio);
 	}
 
+	public List<Convenio> listar() {
+		return repo.findAll();
+	}
 }

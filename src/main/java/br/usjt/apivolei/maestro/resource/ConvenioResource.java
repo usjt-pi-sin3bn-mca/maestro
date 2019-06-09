@@ -1,5 +1,7 @@
 package br.usjt.apivolei.maestro.resource;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +44,9 @@ public class ConvenioResource {
 		return service.listarConvenios(id);
 	}
 	
+	@GetMapping
+	public ResponseEntity<?> listarConvenios() {
+		List<Convenio> convenios = service.listar();
+		return ResponseEntity.ok(convenios);
+	}
 }
