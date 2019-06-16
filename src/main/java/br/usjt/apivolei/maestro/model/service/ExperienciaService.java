@@ -1,5 +1,6 @@
 package br.usjt.apivolei.maestro.model.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,76 +21,59 @@ public class ExperienciaService {
 	@Autowired
 	private ExperienciaRepository expeRepo;
 
-	public void cadastrar(Experiencia experiencia){
-		try{
-			experiencia.setAtivo(true);
-
-			salvar(experiencia);
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-
-			throw e;
-		}
+	public void cadastrar(Experiencia experiencia) throws Exception {
+		experiencia.setAtivo(true);
+		salvar(experiencia);
 	}
 
-	public List<Experiencia> buscar(){
-		List<Experiencia> experienciaList;
+	public List<Experiencia> findAll() throws Exception {
 
-		try {
-			experienciaList = expeRepo.findAll();
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println(e.getMessage());
+		List<Experiencia> experiencias = expeRepo.findAll();
 
-			throw e;
+		//Populando uma lista de indices apenas com as experiencias que não estão mais disponiveis
+		int i = 0;
+		List<Integer> indeces = new ArrayList<>();
+		for (Experiencia e: experiencias) {
+			if (e.getQtdDisponivel() == 0) {
+				 indeces.add(i);
+			}
+			i++;
 		}
 
-		return experienciaList;
-	}
-
-	public Experiencia buscar(Long id){
-		Experiencia experiencia;
-
-		try {
-			experiencia = expeRepo.findById(id).get();
-		}catch(Exception e){
-			e.printStackTrace();
-			System.out.println(e.getMessage());
-
-			throw e;
+		//Removendo da lista as experiencias que não estão mais disponiveis
+		if (experiencias != null && experiencias.size() > 0) {
+			for (Integer n: indeces) {
+				experiencias.remove(n);
+			}
 		}
 
-		return experiencia;
+		return experiencias;
 	}
 
-	public ResponseEntity<?> deletar(Experiencia expe, HttpServletRequest request ){
+	public Experiencia buscar(Long id) throws Exception {
+		return expeRepo.findById(id).get();
+	}
 
+	public ResponseEntity<?> deletar(Experiencia expe, HttpServletRequest request ) {
 		try {
         	expeRepo.delete(expe);
  		} catch (Exception e) {
 			e.printStackTrace();
  			return ResponseEntity.badRequest().body("Experiencia nao existe");
  		}
-
 		return ResponseEntity.ok("Experiência deletada com sucesso");
 	}
 	
-	public void alterarExperiencia(Long id, Experiencia experienciaParam) {
-		try {
-			Experiencia experiencia = expeRepo.findById(id).get();
-			
-			experiencia.setNome(experienciaParam.getNome());
-			experiencia.setData(experienciaParam.getData());
-			experiencia.setDescricao(experienciaParam.getDescricao());
-			experiencia.setLocal(experienciaParam.getLocal());
+	public void alterarExperiencia(Long id, Experiencia experienciaParam) throws Exception {
 
-			salvar(experiencia);
-		} catch (Exception e) {
-			e.printStackTrace();
+		Experiencia experiencia = expeRepo.findById(id).get();
+		
+		experiencia.setNome(experienciaParam.getNome());
+		experiencia.setData(experienciaParam.getData());
+		experiencia.setDescricao(experienciaParam.getDescricao());
+		experiencia.setLocal(experienciaParam.getLocal());
 
-			throw e;
-		}
+		salvar(experiencia);
 	}
 
 	public boolean adquirir(Experiencia experiencia, Torcedor torcedor) {
@@ -135,5 +119,9 @@ public class ExperienciaService {
 
 	public Experiencia salvar(Experiencia experiencia){
 		return expeRepo.save(experiencia);
+	}
+
+	public void remove(Long id) throws Exception {
+		expeRepo.delete(expeRepo.findById(id).get());
 	}
 }

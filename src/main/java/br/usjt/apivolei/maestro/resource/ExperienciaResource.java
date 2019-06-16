@@ -25,37 +25,31 @@ public class ExperienciaResource {
     public ResponseEntity<?> cadastrar(@RequestBody Experiencia experiencia){
         try {
             experienciaService.cadastrar(experiencia);
-        }catch (Exception e){
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Erro ao cadastrar experiência");
         }
-
         return ResponseEntity.ok("Experiência cadastrada");
     }
 
     @GetMapping
     public ResponseEntity<?> listarExperiencias(){
-        List<Experiencia> experienciaList;
-
         try {
-            experienciaList = experienciaService.buscar();
-        }catch (Exception e){
+            return ResponseEntity.ok(experienciaService.findAll());
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body("Ocorreu um erro ao buscar as experiências");
         }
-
-        return ResponseEntity.ok(experienciaList);
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> buscarExperiencia(@PathVariable Long id){
-        Experiencia experiencia;
-
         try {
-            experiencia = experienciaService.buscar(id);
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body("Ocorreu um erro ao buscar a experiência");
+            return ResponseEntity.ok(experienciaService.buscar(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Experiencia não existe");
         }
-
-        return ResponseEntity.ok(experiencia);
     }
 
     @PutMapping(value = "/adquirir/{idExperiencia}/{idTorcedor}")
@@ -70,7 +64,7 @@ public class ExperienciaResource {
             experienciaAdquirida = experienciaService.adquirir(experiencia, torcedor);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body("Ocorreu um erro ao adquirir experiência, tente novamente!");
+            return ResponseEntity.badRequest().body("Experiencia ou usuario não existe");
         }
 
         if (experienciaAdquirida) {
@@ -80,6 +74,7 @@ public class ExperienciaResource {
         return ResponseEntity.badRequest().body("O torcedor não possuí pontuação suficiente para adquirir a experiência");
     }
     
+    @PutMapping("/cancelar/{idExperiencia}/{idTorcedor}")
     public ResponseEntity<?> cancelar(@PathVariable Long idExperiencia, @PathVariable Long idTorcedor){
     	boolean experienciaRemovida = false;
     	
@@ -91,7 +86,6 @@ public class ExperienciaResource {
             
 		} catch (Exception e) {
             e.printStackTrace();
-            System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body("Ocorreu um erro ao cancelar experiência, tente novamente!");
 		}
         if(experienciaRemovida){
@@ -99,6 +93,27 @@ public class ExperienciaResource {
         }else{
             return ResponseEntity.badRequest().body("O torcedor não possuí experiencia para cancelar");
         }
-    	
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> alterar(@PathVariable Long id, @RequestBody Experiencia experiencia) {
+        try {
+            experienciaService.alterarExperiencia(id, experiencia);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Json inválido");
+        }
+        return ResponseEntity.ok("Dados alterados com sucesso");
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            experienciaService.remove(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body("Experiencia não existe");
+        }
+        return ResponseEntity.ok("Sucesso");
     }
 }
