@@ -2,8 +2,6 @@ package br.usjt.apivolei.maestro.model.service;
 
 import java.net.URI;
 import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,8 +28,6 @@ import br.usjt.apivolei.maestro.model.repository.TorcedorRepository;
 @Service
 public class TorcedorService {
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-	
 	@Autowired
 	private DetalhesRetorno retorno;
 	
